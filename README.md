@@ -57,7 +57,8 @@ ssh <your-username>@<server-ip>
 > **Screenshot 1:** Take a screenshot of your terminal showing a successful
 > SSH login (the welcome banner and your shell prompt) and insert it here.
 >
-> `[insert screenshot]`
+> <img width="784" height="201" alt="grafik" src="https://github.com/user-attachments/assets/4a231bc3-cecd-490e-a25b-6d3161305b0f" />
+
 
 ### Option B – Your Own Machine
 
@@ -98,7 +99,8 @@ psql --version
 
 > **Screenshot 2:** Take a screenshot showing the output of both commands.
 >
-> `[insert screenshot]`
+> <img width="404" height="83" alt="grafik" src="https://github.com/user-attachments/assets/cc865221-ec22-46bc-8b59-8b781226c199" />
+
 
 ---
 
@@ -154,7 +156,10 @@ Exit the superuser session:
 > **Screenshot 3:** Take a screenshot showing the `CREATE ROLE`, `CREATE DATABASE`,
 > and both `SELECT` results inside the `postgres=#` session.
 >
-> `[insert screenshot]`
+> I could not create a role, because i am no sudo user on this system.
+> <img width="717" height="342" alt="grafik" src="https://github.com/user-attachments/assets/cea20ecb-30b2-4389-8bb9-375c9ac5a932" />
+
+
 
 ---
 
