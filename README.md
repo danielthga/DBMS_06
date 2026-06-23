@@ -261,7 +261,8 @@ Inspect the structure of one table:
 > **Screenshot 4:** Take a screenshot showing the output of `\dt` and
 > `\d ausleihe`.
 >
-> `[insert screenshot]`
+> <img width="1701" height="790" alt="grafik" src="https://github.com/user-attachments/assets/8a494f42-acb9-4de8-ba9e-90912a151270" />
+
 
 ### Questions for Section 4
 
@@ -269,19 +270,19 @@ Inspect the structure of one table:
 and `mitglied` before `ausleihe`. Why does this order matter? What error would
 PostgreSQL report if you tried to create `ausleihe` first?
 
-> *Your answer:*
+> Ausleihe contents multi foreign keys, the table with this keys has to be created first.
 
 **Question 4.2:** The `mitglied_id` and `ausleihe_id` columns use
 `GENERATED ALWAYS AS IDENTITY`. What does this mean? What happens if you try to
 supply a value explicitly with `INSERT INTO mitglied (mitglied_id, ...) VALUES (5, ...)`?
 
-> *Your answer:*
+> This means that the IDs are incremented automaticly, you cant modify them by your own.
 
 **Question 4.3:** `tagesgebuehr` is defined as `NUMERIC(6,2)` while a simpler
 `REAL` would also hold decimal numbers. Give a concrete example of an arithmetic
 result that would differ between the two types when calculating a lending fee.
 
-> *Your answer:*
+> A real value is not that precise, because it is stored as a mantissa and exponent. When we calculate with real values we have very small inaccuracies. Which will either delete money or create money which isn't there.
 
 ---
 
@@ -366,7 +367,8 @@ SELECT COUNT(*) FROM mitglied;
 
 > **Screenshot 5:** Take a screenshot showing the three `COUNT(*)` results.
 >
-> `[insert screenshot]`
+> <img width="706" height="498" alt="grafik" src="https://github.com/user-attachments/assets/5e50eb74-aecb-4e74-a237-b8d9408ca236" />
+
 
 Exit `psql`:
 
@@ -451,7 +453,8 @@ SELECT * FROM ausleihe;
 
 > **Screenshot 6:** Take a screenshot showing the full output of `SELECT * FROM ausleihe`.
 >
-> `[insert screenshot]`
+> <img width="1330" height="358" alt="grafik" src="https://github.com/user-attachments/assets/c8e03e3e-5b8b-4b54-98ce-62bd8640b13a" />
+
 
 ### Questions for Section 6
 
@@ -459,19 +462,19 @@ SELECT * FROM ausleihe;
 filesystem. What is the difference between server-side `COPY` and a
 client-side import? In which scenario would you need the client-side variant?
 
-> *Your answer:*
+> A client side copy copies a file that is on the maschine of the client. While the server looks into his own filesystem and thats why we need the absolute path.
 
 **Question 6.2:** The `NULL ''` option maps empty CSV fields to `NULL`.
 What would happen without this option if the `rueckgabe_datum` field is empty?
 
-> *Your answer:*
+> If we dont use the option, postgre will give us an error because it tries to interpretes the empty value as a date.
 
 **Question 6.3:** `ausleihe_id` is `GENERATED ALWAYS AS IDENTITY` and was not
 included in the CSV or the `COPY` column list. How does PostgreSQL handle the
 missing value? What would happen if you tried to include `ausleihe_id` in the
 `COPY` column list with explicit values?
 
-> *Your answer:*
+> Postgre automaticly creates the id, if we would include a value for ausleihe_id it will throw an error.
 
 ---
 
@@ -508,6 +511,7 @@ ORDER BY tage_ausgeliehen DESC;
 
 > *Describe the result: how many open loans are there, and which member has
 > held a book the longest?*
+> There are two open loans and Lea Hartmann has held her book the longest.
 
 ---
 
@@ -550,12 +554,13 @@ WHERE  NOT EXISTS (
 ```
 
 > *Which books appear in the result? Verify the result manually against the
-> data you entered.*
+> data you entered.* Das Parfüm has no lending record.
 
 > **Screenshot 7:** Take a screenshot showing the output of all three queries
 > in sequence in the `psql` shell.
 >
-> `[insert screenshot]`
+> <img width="847" height="388" alt="grafik" src="https://github.com/user-attachments/assets/9b348240-2e23-4618-991f-0bf92fe3be83" />
+
 
 ### Questions for Section 7
 
@@ -563,19 +568,26 @@ WHERE  NOT EXISTS (
 performed to always produce a correct result, and does the join order affect
 correctness or only performance?
 
-> *Your answer:*
+> The join order does not effect the result, but it effects the performance. It would be good to filter a lot items with the first join.
 
 **Question 7.2:** Query 2 groups by `m.mitglied_id` in addition to the name
 columns. Why is grouping by the primary key necessary even though names appear
 unique in the sample data?
 
-> *Your answer:*
+> A name must not be unique, by grouping with the primary key you ensure to have unique persons.
 
 **Question 7.3:** Query 3 uses `NOT EXISTS` with a correlated subquery. Rewrite
 the query using `EXCEPT` and verify that both variants return the same result.
 Write your rewritten query here:
 
-> *Your rewritten query:*
+> SELECT titel, verlag FROM buch
+> EXCEPT
+> SELECT b.titel, b.verlag FROM buch b JOIN exemplar e ON e.isbn = b.isbn JOIN ausleihe a ON a.exemplar_id = e.exemplar_id;
+
+
+
+
+
 
 Exit `psql`:
 
@@ -672,7 +684,8 @@ psql -U <your-username> -d kino -f kino.sql
 
 > **Screenshot 8:** Take a screenshot showing the script execution output.
 >
-> `[insert screenshot]`
+> <img width="991" height="228" alt="grafik" src="https://github.com/user-attachments/assets/44bc5990-7b5a-405d-8213-4d2a7465b320" />
+
 
 ---
 
@@ -725,7 +738,8 @@ ORDER BY reservierungen DESC;
 > **Screenshot 9:** Take a screenshot showing the output of all three
 > `SELECT` statements.
 >
-> `[insert screenshot]`
+> <img width="1104" height="1231" alt="grafik" src="https://github.com/user-attachments/assets/80bfa18c-f190-4c29-aade-d1ba3bf5ff44" />
+
 
 ### Questions for Section 9
 
@@ -733,19 +747,19 @@ ORDER BY reservierungen DESC;
 constraint. What does this prevent, and at which level is this constraint
 enforced — application or database?
 
-> *Your answer:*
+> This prevents that two people can book the same seat. It is enforced on database level.
 
 **Question 9.2:** The third query uses `LEFT JOIN` between `vorstellung` and
 `reservierung`. What would be different about the result if you used `JOIN`
 (inner join) instead? Which films would disappear from the result and why?
 
-> *Your answer:*
+> The inner join will only display matching items in both tables, so it wont display a item which has no reservations.
 
 **Question 9.3:** `ON DELETE CASCADE` was chosen for `reservierung.vorstellung_id`,
 but `ON DELETE RESTRICT` for `vorstellung.film_id`. Justify both choices in
 terms of the domain.
 
-> *Your answer:*
+> CASCADE: If a screening is cancelled and deleted, all seat reservations for that specific show are automatically deleted too. RESTRICT: You are blocked from deleting a movie out of the system if there are still upcoming screenings scheduled for it.
 
 Exit `psql`:
 
@@ -762,7 +776,8 @@ SQLite (DBMS_05) and PostgreSQL (this exercise) are both relational databases,
 but they operate very differently. Name two concrete differences you experienced
 in this exercise — in terms of setup, access control, or SQL behaviour.
 
-> *Your answer:*
+> The setup of SQLite is more easy, you only need to install the package.
+> The acces control in PostgreSQL is better, you can add multiple users with different roles.
 
 **Question B – COPY vs. INSERT:**  
 You inserted the `buch` and `exemplar` rows one at a time, and the `ausleihe`
@@ -770,21 +785,21 @@ rows via `COPY`. For a real import of 50,000 rows, which approach would you
 choose and why? What is the main operational cost of individual `INSERT`
 statements at scale?
 
-> *Your answer:*
+> I would choose COPY. The main operational cost of individual INSERT statements is that the database has to process, execute, and write a separate transaction to the hard drive for every single row, which is incredibly slow at scale. COPY does it all at once.
 
 **Question C – Role model:**  
 You created a dedicated role with `LOGIN` and a password. The `postgres`
 superuser also exists. What is the security principle behind creating a
 separate role instead of always connecting as `postgres`?
 
-> *Your answer:*
+> As a normal user you cant exidently delete something you are not allowed. So its safer to only use the SU if you need to.
 
 **Question D – Script-driven setup:**  
 The `kino.sql` script creates the schema and inserts data in one run. What
 is the advantage of this approach over typing the statements interactively?
 Name one situation where an interactive approach is still preferable.
 
-> *Your answer:*
+> Scripts allow you to save, share, and instantly reproduce an entire database setup without making any typos. The interactive approach is really only better when you are actively debugging a broken query or exploring unfamiliar data for the first time.
 
 ---
 
